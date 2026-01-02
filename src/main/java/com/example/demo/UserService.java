@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.stats.AgeStats;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +57,11 @@ public class UserService {
         return jpaRepository.findByFirstNameIgnoreCase(firstName);
     }
 
-    public List<User> getFirstRows(int rows) {
-        return jpaRepository.getAllUsers(PageRequest.of(0, rows));
+    public Page<User> getFirstRows(int rows) {
+        return jpaRepository.findAll(PageRequest.of(0, rows));
+    }
+
+    public AgeStats getAgeStatistics() {
+        return jpaRepository.getGlobalAgeStats();
     }
 }

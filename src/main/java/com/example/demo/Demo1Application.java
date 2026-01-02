@@ -26,13 +26,13 @@ public class Demo1Application implements ApplicationRunner {
 	public void run(ApplicationArguments args) throws Exception {
 
 		System.out.println();
-		System.out.println();
-		System.out.println("=====================================");
-		System.out.println("Size of table: " + userService.size());
-		System.out.println();
+		System.out.println("======================================");
 
-		userService.getFirstRows(100)
-				.forEach(System.out::println);
+		System.out.println("Min age --> " + userService.getAgeStatistics().minAge());
+		System.out.println("Max age --> " + userService.getAgeStatistics().maxAge());
+		System.out.println("Avg age --> " + userService.getAgeStatistics().averageAge());
+
+		System.out.println("=======================================");
 
 	}
 }

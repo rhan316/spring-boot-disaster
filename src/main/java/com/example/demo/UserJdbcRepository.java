@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class UserJdbcRepository {
@@ -17,17 +18,19 @@ public class UserJdbcRepository {
     public void batchInsert(List<User> users, int batchSize) {
 
         String sql = """
-                INSERT INTO users (email, password, first_name, last_name, created_at)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO users (id, email, password, first_name, last_name, created_at, age)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
         jdbcTemplate.batchUpdate(
                 sql, users, batchSize, (ps, user) -> {
-                    ps.setString(1, user.getEmail());
-                    ps.setString(2, user.getPassword());
-                    ps.setString(3, user.getFirstName());
-                    ps.setString(4, user.getLastName());
-                    ps.setObject(5, user.getCreatedAt());
+                    ps.setObject(1, UUID.randomUUID());
+                    ps.setString(2, user.getEmail());
+                    ps.setString(3, user.getPassword());
+                    ps.setString(4, user.getFirstName());
+                    ps.setString(5, user.getLastName());
+                    ps.setObject(6, user.getCreatedAt());
+                    ps.setInt(7, user.getAge());
                 }
         );
     }

@@ -1,16 +1,25 @@
 package com.example.demo;
 
-import org.springframework.data.domain.Pageable;
+import com.example.demo.stats.AgeStats;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface UserJpaRepository extends JpaRepository<User, Long> {
+public interface UserJpaRepository extends JpaRepository<User, UUID> {
 
     List<User> findByFirstName(String firstName);
     List<User> findByFirstNameIgnoreCase(String firstName);
 
-    @Query("SELECT u FROM User u")
-    List<User> getAllUsers(Pageable pageable);
+    @Query("""
+        SELECT new com.example.demo.stats.AgeStats(
+                CAST(AVG(u.age) AS double),
+                CAST(MIN(u.age) AS integer),
+                CAST(MAX(u.age) AS integer),
+                COUNT(u)
+            )
+                FROM User u
+    """)
+    AgeStats getGlobalAgeStats();
 }
