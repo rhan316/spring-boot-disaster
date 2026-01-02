@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.demo.exceptions.StatisticsNotAvailableException;
 import com.example.demo.stats.AgeStats;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -62,6 +63,8 @@ public class UserService {
     }
 
     public AgeStats getAgeStatistics() {
-        return jpaRepository.getGlobalAgeStats();
+        return jpaRepository.getGlobalAgeStats()
+                .filter(stats -> stats.totalUsers() > 0)
+                .orElseThrow(() -> new StatisticsNotAvailableException("No data user for stats."));
     }
 }
