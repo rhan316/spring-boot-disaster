@@ -1,7 +1,14 @@
-package com.example.demo;
+package com.example.demo.service;
 
+import com.example.demo.entity.UserBatchProperties;
+import com.example.demo.entity.GenerateData;
+import com.example.demo.entity.User;
 import com.example.demo.exceptions.StatisticsNotAvailableException;
+import com.example.demo.repository.UserJdbcRepository;
+import com.example.demo.repository.UserJpaRepository;
 import com.example.demo.stats.AgeStats;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,6 +36,7 @@ public class UserService {
         this.jpaRepository = jpaRepository;
     }
 
+    @CacheEvict(value = "userAgeStats", allEntries = true)
     public void batch(int batchSize) {
 
         if (batchSize <= 0 || batchSize > properties.maxBatchSize()) {
@@ -62,6 +70,7 @@ public class UserService {
         return jpaRepository.findAll(PageRequest.of(0, rows));
     }
 
+    @Cacheable(value = "userAgeStats", key = "'global'")
     public AgeStats getAgeStatistics() {
         return jpaRepository.getGlobalAgeStats()
                 .filter(stats -> stats.totalUsers() > 0)

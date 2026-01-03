@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.entity;
 
 import net.datafaker.Faker;
 import org.springframework.stereotype.Component;
